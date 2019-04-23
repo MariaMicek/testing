@@ -1,37 +1,55 @@
-const add = (a, b) => Number(a) && Number(b) ? Math.round((Number(a) + Number(b)) * 1000) / 1000 : 0
+const sumOrderPrice = (orders) => orders.reduce(
+    (sum, product) => sum + product.price * (product.quantity || 1),
+    0
+)
 
-if (
-    add(2, 5) !== 7 || 
-    add(2, 10) !== 12 || 
-    add(0, 0) !== 0 ||
-    add(-10,-30) !== -40
-    ) {
-    throw new Error('błąd dodawania liczb całkowitych')
+const testOrder1 = [
+    { name: 'żwirek dla kota', price: 100 },
+    { name: 'sok pomarańczowy', price: 4 },
+]
+
+if (sumOrderPrice(testOrder1) !== 104) {
+    throw new Error('simple orderis not working')
 }
+console.log('simple order is working')
 
-console.log('dodawanie liczb całkowitych działa')
+const testOrder2 = [
+    { name: 'żwirek dla kota', price: 100, quantity: 2, },
+    { name: 'sok pomarańczowy', price: 4, quantity: 3, },
+]
 
-if (
-    add('2', '5') !== 7 || 
-    add('2', '10') !== 12 ||
-    add('-10','-30') !== -40
-    ) {
-    throw new Error('błąd dodawania liczb w stringach')
+if (sumOrderPrice(testOrder2) !== 212) {
+    throw new Error('order with quantity is not working')
 }
+console.log('order with quantity is working')
 
-console.log('dodawanie liczb w stringach działa')
+const testOrder3 = [
+    { name: 'żwirek dla kota', price: 100, },
+    { name: 'sok pomarańczowy', price: 4, quantity: 3, },
+]
 
-if (
-    add('ala', 'ma kota') !== 0 || 
-    add('ala', 5) !== 0
-    ) {
-    throw new Error('funkcja powinna zwracać zero dla stringów z literami')
+if (sumOrderPrice(testOrder3) !== 112) {
+    throw new Error('order with and without quantity is not working')
 }
+console.log('order with and without quantity is working')
 
-console.log('funkcja zwraca zero dla stringów z literami')
+const testOrder4 = [
+    { name: 'żwirek dla kota', price: 100, },
+    { name: 'sok pomarańczowy', price: 4, quantity: 3, },
+    { name: 'shipment', price: 120 }
+]
 
-if (add(0.2, 0.004) !== 0.204) {
-    throw new Error('błąd dodawania ułamków')
+if (sumOrderPrice(testOrder4) !== 112) {
+    throw new Error('order (less then 100) with shipment is not working')
 }
+console.log('order (less then 100) with shipment is working')
 
-console.log('dodawanie ułamków działa')
+const testOrder5 = [
+    { name: 'sok pomarańczowy', price: 4, quantity: 3, },
+    { name: 'shipment', price: 120 }
+]
+
+if (sumOrderPrice(testOrder5) !== 132) {
+    throw new Error('order (more then 100) with shipment is not working')
+}
+console.log('order (more then 100) with shipment is working')
