@@ -1,5 +1,13 @@
 const sumOrderPrice = (orders) => orders.reduce(
-    (sum, product) => sum + product.price * (product.quantity || 1),
+    (sum, product, index, array) => {
+        if (
+            product.name === 'shipment' &&
+            (sumOrderPrice(array.slice(index + 1, array.length)) + sum) > 100       //rekurencyjne wywołanie funkcji zwróci sumę następnych elementów
+        ) {                                                                         //do których jest dodana dotychczasowa suma (bez obecnie przetwarzanego elementu)
+            return sum
+        }
+        return sum + product.price * (product.quantity || 1)
+    },
     0
 )
 
@@ -53,3 +61,14 @@ if (sumOrderPrice(testOrder5) !== 132) {
     throw new Error('order (more then 100) with shipment is not working')
 }
 console.log('order (more then 100) with shipment is working')
+
+const testOrder6 = [
+    { name: 'shipment', price: 120 },
+    { name: 'żwirek dla kota', price: 100, },
+    { name: 'sok pomarańczowy', price: 4, quantity: 3, },
+]
+
+if (sumOrderPrice(testOrder6) !== 112) {
+    throw new Error('order with shipment in the wrong place is not working')
+}
+console.log('order with shipment in the wrong place is working')
